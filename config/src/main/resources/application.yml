@@ -1,0 +1,23 @@
+server:
+  port: 8006
+spring:
+  application:
+    name: config
+  profiles:
+    active: dev
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/LLLLLLLYV/demo.git
+          search-paths: config仓库
+          username: 2279939290@qq.com
+          password: qwe147963.
+      label: master
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8001/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: 127.0.0.1:8006
