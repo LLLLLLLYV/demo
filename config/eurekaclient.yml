@@ -18,3 +18,8 @@ eureka:
     instance-id: 127.0.0.1:${server.port}
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,info
