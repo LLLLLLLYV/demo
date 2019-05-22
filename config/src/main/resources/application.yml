@@ -10,10 +10,18 @@ spring:
       server:
         git:
           uri: https://github.com/LLLLLLLYV/demo.git
-          search-paths: config仓库
+          search-paths: config
           username: 2279939290@qq.com
           password: qwe147963.
+          force-pull: true
       label: master
+  rabbitmq:
+    host: 47.94.83.189
+    port: 5672
+    username: guest
+    password: guest
+    virtualHost: /
+    publisherConfirms: true
 eureka:
   client:
     serviceUrl:
@@ -21,3 +29,8 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: 127.0.0.1:8006
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,info,bus-refresh

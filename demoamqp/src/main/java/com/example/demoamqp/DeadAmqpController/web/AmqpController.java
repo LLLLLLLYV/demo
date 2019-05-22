@@ -11,6 +11,7 @@ import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RefreshScope
 public class AmqpController {
 
     private static final Logger logger = LoggerFactory.getLogger(AmqpController.class);
@@ -31,17 +33,17 @@ public class AmqpController {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
     @Value("${server.port}")
     private String port;
-
     @RequestMapping(value = "/haha" ,method = RequestMethod.GET)
     public String haha(@Valid String id){
 
         User user = cacheService.queryUserById(id);
         System.out.println(user);
        // int a=1/0;
+
         return port;
-        //return "xx";
     }
 
     @RequestMapping(value = "/sethaha" ,method = RequestMethod.POST)
