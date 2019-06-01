@@ -23,4 +23,9 @@
         UPDATE admin SET status=1 WHERE id=#{id}
 
     </update>
+
+    <update id="updateUserByDate" parameterType="java.lang.String">
+        UPDATE admin SET ${name}=#{value} WHERE id=#{id}
+
+    </update>
 </mapper>

@@ -8,4 +8,5 @@ public interface CacheService {
     User queryUserById(String id);
     void addUserByUser(User user);
     void updateUserById(String id);
+    int updateUserByDate(String name,String value,String id);
 }

@@ -36,4 +36,10 @@ public class CacheServiceImpl implements CacheService {
     public void updateUserById(String id) {
         ca.updateUserById(id);
     }
+
+    @Override
+    public int updateUserByDate(String name, String value, String id) {
+        int i = ca.updateUserByDate(name, value, id);
+        return i;
+    }
 }

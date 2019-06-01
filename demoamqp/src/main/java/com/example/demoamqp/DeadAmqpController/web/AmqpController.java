@@ -3,6 +3,8 @@ package com.example.demoamqp.DeadAmqpController.web;
 import com.example.demoamqp.DeadAmqpController.annotation.ExcelValue;
 import com.example.demoamqp.DeadAmqpController.bean.MerchantsCustomer;
 import com.example.demoamqp.DeadAmqpController.bean.User;
+import com.example.demoamqp.DeadAmqpController.config.ExportExcel;
+import com.example.demoamqp.DeadAmqpController.config.UserBean;
 import com.example.demoamqp.DeadAmqpController.config.WebExceptionAspest;
 import com.example.demoamqp.DeadAmqpController.service.impl.CacheServiceImpl;
 import com.example.demoamqp.DeadAmqpController.config.RabbitConfig;
@@ -17,6 +19,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -46,6 +50,33 @@ public class AmqpController {
 
     @Value("${server.port}")
     private String port;
+
+    @Autowired(required = false)
+    private User user0;
+
+
+    @RequestMapping(value="getUserBean",method = RequestMethod.GET)
+    public User getUserBean(Boolean isClose){
+
+        System.out.println(user0);
+        System.out.println(user0);
+        return user0;
+    }
+
+    /**
+     * 传入指定修改的字段
+     * @param name
+     * @param value
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/updateByDate" ,method = RequestMethod.POST)
+    public int updateByDate(String name, String value, String id){
+        int i = cacheService.updateUserByDate(name, value, id);
+        System.out.println(i);
+        return i;
+    }
+
     @RequestMapping(value = "/haha" ,method = RequestMethod.GET)
     public String haha(@Valid String id){
         User user = cacheService.queryUserById(id);
@@ -202,5 +233,27 @@ public class AmqpController {
         sheet.addMergedRegion(cra);
 //注意：边框样式需要重新设置一下
         RegionUtil.setBorderTop(HSSFBorderFormatting.BORDER_THICK, cra, sheet, wb);
+    }
+
+
+    @RequestMapping(value="/export",method = RequestMethod.GET)
+    public String export(HttpServletRequest request, HttpServletResponse response){
+        try {
+            String fileName = "xxx.xlsx";
+
+            MerchantsCustomer me=new MerchantsCustomer("11","阿里伯伯",11,"22","9999");
+            MerchantsCustomer me2=new MerchantsCustomer("112","阿里伯伯2",112,"222","99992");
+            List<MerchantsCustomer> list=new ArrayList<>();
+            list.add(me);
+            list.add(me2);
+            ExportExcel exportExcel =new ExportExcel("xxxxxx", MerchantsCustomer.class);
+           // exportExcel.setDatePattern("yyyy-MM-dd HH:mm:ss");
+            exportExcel.setDataList(list).write(response, fileName).dispose();
+
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

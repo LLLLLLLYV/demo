@@ -1,7 +1,9 @@
 package com.example.demoamqp.RedisController;
 
 import com.example.demoamqp.DeadAmqpController.bean.User;
+import com.example.demoamqp.RedisController.config.RedisDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,28 @@ public class DemoRedisController {
     private RedisTemplate redisTemplate;
     @Autowired
     private JedisPool jedisPool;
+
+    @Autowired
+    private User user0;
+
+    @RequestMapping(value="getUserBean2",method = RequestMethod.GET)
+    public User getUserBean(Boolean isClose){
+
+        System.out.println(user0);
+        System.out.println(user0);
+        return user0;
+    }
+
+
+    @RequestMapping(value = "getRedisBeans",method = RequestMethod.GET)
+    private void getRedisBeans(){
+        AnnotationConfigApplicationContext applicationContext2 = new AnnotationConfigApplicationContext(RedisDate.class);
+        String[] beanNames = applicationContext2.getBeanDefinitionNames();
+        for(int i=0;i<beanNames.length;i++){
+            System.out.println("bean名称为==="+beanNames[i]);
+        }
+    }
+
 
     @RequestMapping(value = "setRedit",method = RequestMethod.GET)
     public Long setRedit(String key){

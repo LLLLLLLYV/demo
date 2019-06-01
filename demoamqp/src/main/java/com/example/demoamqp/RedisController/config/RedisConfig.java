@@ -4,6 +4,7 @@ import com.github.xiaolyuh.serializer.KryoRedisSerializer;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -33,33 +34,21 @@ import java.time.Duration;
 public class RedisConfig {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private int port;
-
-    @Value("${spring.redis.timeout}")
-    private int timeout;
-
-    @Value("${spring.redis.jedis.pool.max-idle}")
-    private int maxIdle;
-
-    @Value("${spring.redis.jedis.pool.max-wait}")
-    private long maxWaitMillis;
-
+    @Autowired
+    private RedisDate redisDate;
     @Bean
     public JedisPool redisPoolFactory()  throws Exception{
+        logger.info("-----------------redisDate："+redisDate);
         logger.info("JedisPool注入成功！！");
-        logger.info("redis地址：" + host + ":" + port);
+        logger.info("redis地址：" + redisDate.getHost() + ":" + redisDate.getPort());
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(maxIdle);
-        jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
+        jedisPoolConfig.setMaxIdle(redisDate.getJedis().get("pool.maxIdle"));
+        jedisPoolConfig.setMaxWaitMillis(redisDate.getJedis().get("pool.maxWait"));
         // 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true
         jedisPoolConfig.setBlockWhenExhausted(true);
         // 是否启用pool的jmx管理功能, 默认true
         jedisPoolConfig.setJmxEnabled(true);
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout);
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, redisDate.getHost(), redisDate.getPort(), redisDate.getTimeout());
         return jedisPool;
     }
 
