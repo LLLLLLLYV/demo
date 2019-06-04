@@ -1,4 +1,4 @@
-package com.utils;
+package com.example.demoamqp.DeadAmqpController.utils;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -14,9 +14,9 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 public class CodeUtil {
-    private static int width = 90;// ¶¨ÒåÍ¼Æ¬µÄwidth
-    private static int height = 20;// ¶¨ÒåÍ¼Æ¬µÄheight
-    private static int codeCount = 4;// ¶¨ÒåÍ¼Æ¬ÉÏÏÔÊ¾ÑéÖ¤ÂëµÄ¸öÊý
+    private static int width = 90;// ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½width
+    private static int height = 20;// ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½height
+    private static int codeCount = 4;// ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ö¤ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½
     private static int xx = 15;
     private static int fontHeight = 18;
     private static  int codeY = 16;
@@ -24,33 +24,33 @@ public class CodeUtil {
             'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
     
     /**
-     * Éú³ÉÒ»¸ömap¼¯ºÏ
-     * codeÎªÉú³ÉµÄÑéÖ¤Âë
-     * codePicÎªÉú³ÉµÄÑéÖ¤ÂëBufferedImage¶ÔÏó
+     * ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½mapï¿½ï¿½ï¿½ï¿½
+     * codeÎªï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ö¤ï¿½ï¿½
+     * codePicÎªï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ö¤ï¿½ï¿½BufferedImageï¿½ï¿½ï¿½ï¿½
      * @return
      */
     public static Map<String,Object> generateCodeAndPic() {
-        // ¶¨ÒåÍ¼Ïñbuffer
+        // ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½buffer
         BufferedImage buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         // Graphics2D gd = buffImg.createGraphics();
         // Graphics2D gd = (Graphics2D) buffImg.getGraphics();
         Graphics gd = buffImg.getGraphics();
-        // ´´½¨Ò»¸öËæ»úÊýÉú³ÉÆ÷Àà
+        // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Random random = new Random();
-        // ½«Í¼ÏñÌî³äÎª°×É«
+        // ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½É«
         gd.setColor(Color.WHITE);
         gd.fillRect(0, 0, width, height);
 
-        // ´´½¨×ÖÌå£¬×ÖÌåµÄ´óÐ¡Ó¦¸Ã¸ù¾ÝÍ¼Æ¬µÄ¸ß¶ÈÀ´¶¨¡£
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½Ä´ï¿½Ð¡Ó¦ï¿½Ã¸ï¿½ï¿½ï¿½Í¼Æ¬ï¿½Ä¸ß¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Font font = new Font("Fixedsys", Font.BOLD, fontHeight);
-        // ÉèÖÃ×ÖÌå¡£
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å¡£
         gd.setFont(font);
 
-        // »­±ß¿ò¡£
+        // ï¿½ï¿½ï¿½ß¿ï¿½
         gd.setColor(Color.BLACK);
         gd.drawRect(0, 0, width - 1, height - 1);
 
-        // Ëæ»ú²úÉú40Ìõ¸ÉÈÅÏß£¬Ê¹Í¼ÏóÖÐµÄÈÏÖ¤Âë²»Ò×±»ÆäËü³ÌÐòÌ½²âµ½¡£
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½40ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½Ê¹Í¼ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ö¤ï¿½ë²»ï¿½×±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½âµ½ï¿½ï¿½
         gd.setColor(Color.BLACK);
         for (int i = 0; i < 30; i++) {
             int x = random.nextInt(width);
@@ -60,39 +60,39 @@ public class CodeUtil {
             gd.drawLine(x, y, x + xl, y + yl);
         }
 
-        // randomCodeÓÃÓÚ±£´æËæ»ú²úÉúµÄÑéÖ¤Âë£¬ÒÔ±ãÓÃ»§µÇÂ¼ºó½øÐÐÑéÖ¤¡£
+        // randomCodeï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ë£¬ï¿½Ô±ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½
         StringBuffer randomCode = new StringBuffer();
         int red = 0, green = 0, blue = 0;
 
-        // Ëæ»ú²úÉúcodeCountÊý×ÖµÄÑéÖ¤Âë¡£
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½codeCountï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½Ö¤ï¿½ë¡£
         for (int i = 0; i < codeCount; i++) {
-            // µÃµ½Ëæ»ú²úÉúµÄÑéÖ¤ÂëÊý×Ö¡£
+            // ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½
             String code = String.valueOf(codeSequence[random.nextInt(36)]);
-            // ²úÉúËæ»úµÄÑÕÉ«·ÖÁ¿À´¹¹ÔìÑÕÉ«Öµ£¬ÕâÑùÊä³öµÄÃ¿Î»Êý×ÖµÄÑÕÉ«Öµ¶¼½«²»Í¬¡£
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Î»ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½É«Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½
             red = random.nextInt(255);
             green = random.nextInt(255);
             blue = random.nextInt(255);
 
-            // ÓÃËæ»ú²úÉúµÄÑÕÉ«½«ÑéÖ¤Âë»æÖÆµ½Í¼ÏñÖÐ¡£
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½Æµï¿½Í¼ï¿½ï¿½ï¿½Ð¡ï¿½
             gd.setColor(new Color(red, green, blue));
             gd.drawString(code, (i + 1) * xx, codeY);
 
-            // ½«²úÉúµÄËÄ¸öËæ»úÊý×éºÏÔÚÒ»Æð¡£
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
             randomCode.append(code);
         }
         Map<String,Object> map  =new HashMap<String,Object>();
-        //´æ·ÅÑéÖ¤Âë
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½
         map.put("code", randomCode);
-        //´æ·ÅÉú³ÉµÄÑéÖ¤ÂëBufferedImage¶ÔÏó
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½Ö¤ï¿½ï¿½BufferedImageï¿½ï¿½ï¿½ï¿½
         map.put("codePic", buffImg);
         return map;
     }
 
     public static void main(String[] args) throws Exception {
-        //´´½¨ÎÄ¼þÊä³öÁ÷¶ÔÏó
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         OutputStream out = new FileOutputStream("D://img/"+System.currentTimeMillis()+".jpg");
         Map<String,Object> map = CodeUtil.generateCodeAndPic();
         ImageIO.write((RenderedImage) map.get("codePic"), "jpeg", out);
-        System.out.println("ÑéÖ¤ÂëµÄÖµÎª£º"+map.get("code"));
+        System.out.println("ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ÖµÎªï¿½ï¿½"+map.get("code"));
     }
 }

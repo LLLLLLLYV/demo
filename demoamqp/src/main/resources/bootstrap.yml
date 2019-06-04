@@ -38,3 +38,10 @@ management:
     web:
       exposure:
         include: refresh,health,info,bus-refresh
+# pagehelper
+pagehelper:
+  helperDialect: mysql
+  reasonable: false # 如果没有数据  返回空 而非最后一页的数据
+  supportMethodsArguments: true
+  params: count=countSql
+  returnPageInfo: check

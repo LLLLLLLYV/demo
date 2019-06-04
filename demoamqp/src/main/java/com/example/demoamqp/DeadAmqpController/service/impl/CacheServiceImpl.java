@@ -9,10 +9,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
-
 @Service
 public class CacheServiceImpl implements CacheService {
-    @Resource
+    @Autowired
     private CacheDao ca;
 
     @Override

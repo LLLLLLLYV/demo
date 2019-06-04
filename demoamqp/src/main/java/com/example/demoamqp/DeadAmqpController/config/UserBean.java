@@ -1,11 +1,12 @@
 package com.example.demoamqp.DeadAmqpController.config;
 
 import com.example.demoamqp.DeadAmqpController.bean.User;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
+import com.github.pagehelper.PageHelper;
+import org.aopalliance.intercept.Interceptor;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.springframework.context.annotation.*;
 
+import java.util.Properties;
 import java.util.UUID;
 
 @Configuration
@@ -18,8 +19,10 @@ public class UserBean {
      * Web 作用域（reqeust、session、globalsession），自定义作用域
      *
      *@Lazy注解用于标识bean是否需要延迟加载,第一次调用时加载
-     * @return
+     *
+     *@Conditional注解是可以根据一些自定义的条件动态的选择是否加载该bean到springIOC容器中去，
      */
+    @Conditional(UserCondition.class)
     @Lazy
     @Scope(value = "prototype")
     @Bean(value = "user0" ,name = "user0", initMethod ="initUserMethod",destroyMethod = "destoryUserMethod")
@@ -28,6 +31,8 @@ public class UserBean {
         User user = new User(id,"哈哈哈","123",false);
         return user;
     }
+
+
 
 
 }

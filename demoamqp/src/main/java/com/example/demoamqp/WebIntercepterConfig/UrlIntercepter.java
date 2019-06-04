@@ -18,10 +18,10 @@ public class UrlIntercepter implements HandlerInterceptor {
     //请求前
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        StringBuffer requestURL = request.getRequestURL();
+        /*StringBuffer requestURL = request.getRequestURL();
         String contextPath = request.getContextPath();
         logger.info("================requestURL:"+requestURL.toString());
-        logger.info("================contextPath:"+contextPath);
+        logger.info("================contextPath:"+contextPath);*/
         return true;
     }
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demoamqp.DeadAmqpController.dao.VoteRecordDao">
+
+    <resultMap id="voteMap" type="com.example.demoamqp.DeadAmqpController.bean.VoteRecord">
+        <id  column="id" property="id" ></id>
+        <result column="user_id" property="userId"></result>
+        <result column="vote_id" property="voteId"></result>
+        <result column="group_id" property="groupId" ></result>
+        <result column="create_time" property="createTime" ></result>
+    </resultMap>
+
+
+    <select id="queryVoteRecord"  resultMap="voteMap">
+
+        SELECT id,user_id,vote_id,group_id,create_time FROM vote_record
+
+    </select>
+
+    <select id="queryVoteRecordCount" resultType="java.lang.Integer">
+
+        SELECT COUNT(1) FROM vote_record
+    </select>
+</mapper>

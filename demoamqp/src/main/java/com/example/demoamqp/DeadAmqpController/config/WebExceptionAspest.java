@@ -40,7 +40,7 @@ public class WebExceptionAspest {
     private void beforPointcut() {
     }
 
-    @Before("beforPointcut()")
+    //@Before("beforPointcut()")
     public void beforMethod(JoinPoint joinPoint){
 //        result.put("data",animal);//成功返回数据
         logger.info("目标方法名为:" + joinPoint.getSignature().getName());
@@ -106,7 +106,7 @@ public class WebExceptionAspest {
     }
 
 
-   @AfterThrowing(pointcut = "webPointcut()", throwing = "e")
+   //@AfterThrowing(pointcut = "webPointcut()", throwing = "e")
     public void handleThrowing(JoinPoint joinPoint, Exception e) {
 
         //不需要再记录ServiceException，因为在service异常切面中已经记录过

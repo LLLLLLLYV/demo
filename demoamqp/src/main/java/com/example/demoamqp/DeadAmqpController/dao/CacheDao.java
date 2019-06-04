@@ -3,7 +3,10 @@ package com.example.demoamqp.DeadAmqpController.dao;
 
 import com.example.demoamqp.DeadAmqpController.bean.User;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface CacheDao {
 
     User queryUserById(String id);

@@ -3,14 +3,20 @@ package com.example.demoamqp.DeadAmqpController.web;
 import com.example.demoamqp.DeadAmqpController.annotation.ExcelValue;
 import com.example.demoamqp.DeadAmqpController.bean.MerchantsCustomer;
 import com.example.demoamqp.DeadAmqpController.bean.User;
-import com.example.demoamqp.DeadAmqpController.config.ExportExcel;
-import com.example.demoamqp.DeadAmqpController.config.UserBean;
-import com.example.demoamqp.DeadAmqpController.config.WebExceptionAspest;
+import com.example.demoamqp.DeadAmqpController.bean.VoteRecord;
+import com.example.demoamqp.DeadAmqpController.config.*;
 import com.example.demoamqp.DeadAmqpController.service.impl.CacheServiceImpl;
-import com.example.demoamqp.DeadAmqpController.config.RabbitConfig;
-import org.apache.poi.hssf.usermodel.*;
+import com.example.demoamqp.DeadAmqpController.service.impl.VoteRecordServiceImpl;
+import com.example.demoamqp.DeadAmqpController.utils.PoiUtil;
+import com.github.pagehelper.PageHelper;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.RegionUtil;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
@@ -19,20 +25,13 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.util.Assert;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -46,6 +45,9 @@ public class AmqpController {
     private CacheServiceImpl cacheService;
 
     @Autowired
+    private VoteRecordServiceImpl voteRecordService;
+
+    @Autowired
     private RabbitTemplate rabbitTemplate;
 
     @Value("${server.port}")
@@ -53,6 +55,52 @@ public class AmqpController {
 
     @Autowired(required = false)
     private User user0;
+
+
+    @RequestMapping(value = "jisuan",method = RequestMethod.GET)
+    public Long jisuan(Integer a){
+        if(a<2){
+            return 1L;
+        }else{
+            return jisuan(a-1)+jisuan2(a);
+        }
+
+
+    }
+
+    public Long jisuan2(Integer b){
+        if(b==1){
+            return 1L;
+        }else if(0==b){
+            return 0L;
+        }else{
+            return jisuan2(b-1)*b;
+        }
+
+    }
+
+
+    /**
+     * 测试单例模式
+     */
+    @RequestMapping(value = "getSingle",method = RequestMethod.GET)
+    public void getSingle(){
+        Single instance = Single.getInstance();
+        System.out.println(instance);
+    }
+
+    @RequestMapping(value = "setSingle",method = RequestMethod.GET)
+    public void setSingle(){
+        Single.stInstance();
+    }
+
+    @RequestMapping(value="getVoteRecordBysize",method = RequestMethod.GET)
+    public List<VoteRecord> getVoteRecordBysize(HttpServletResponse response){
+
+        List<VoteRecord> voteRecords = voteRecordService.queryVoteRecord();
+        SetExcel(voteRecords,response,"测试表");
+        return voteRecords;
+    }
 
 
     @RequestMapping(value="getUserBean",method = RequestMethod.GET)
@@ -147,24 +195,18 @@ public class AmqpController {
         }
         //存储对象的属性对应那一列
         Map<String,Integer> map =new HashMap<>();
-        HSSFWorkbook wb=new HSSFWorkbook();
+            SXSSFWorkbook wb=new SXSSFWorkbook();
 
             //合并的单元格样式
-            HSSFCellStyle boderStyle = wb.createCellStyle();
-//垂直居中
-            boderStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-            boderStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
-//设置一个边框
-            boderStyle.setBorderTop(HSSFBorderFormatting.BORDER_THICK);
-            boderStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THICK);
-            boderStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THICK);
-            boderStyle.setBorderRight(HSSFBorderFormatting.BORDER_THICK);
+            CellStyle boderStyle = wb.createCellStyle();
+            // HSSFCellStyle boderStyle = wb.createCellStyle();
 
-        HSSFSheet sheet = wb.createSheet("哈哈");
+
+            Sheet sheet = wb.createSheet("哈哈");
         int titleIndex=-1;
         for (int i = 0; i <list.size() ; i++) {
             //创建所在行
-            HSSFRow row = null;
+            Row row = null;
             //获取LIST的当前对象
             T t = list.get(i);
 
@@ -224,36 +266,57 @@ public class AmqpController {
     }
 
     //将表格第一行设置为表头
-    private void setTitet(String titleName,HSSFWorkbook wb,HSSFSheet sheet,HSSFCellStyle style,int firstRow, int lastRow, int firstCol, int lastCol) {
+    private void setTitet(String titleName,SXSSFWorkbook wb,Sheet sheet,CellStyle style,int firstRow, int lastRow, int firstCol, int lastCol) {
         // 合并单元格：参数：起始行, 终止行, 起始列, 终止列
         CellRangeAddress cra = new CellRangeAddress(firstRow, lastRow, firstCol, lastCol);
-        HSSFCell cell = sheet.createRow(firstRow).createCell(firstCol);
+        Cell cell = sheet.createRow(firstRow).createCell(firstCol);
         cell.setCellValue(titleName);
         cell.setCellStyle(style);
         sheet.addMergedRegion(cra);
-//注意：边框样式需要重新设置一下
-        RegionUtil.setBorderTop(HSSFBorderFormatting.BORDER_THICK, cra, sheet, wb);
+
     }
 
 
-    @RequestMapping(value="/export",method = RequestMethod.GET)
-    public String export(HttpServletRequest request, HttpServletResponse response){
-        try {
-            String fileName = "xxx.xlsx";
+    @RequestMapping(value="/getExport",method = RequestMethod.GET)
+    public String getExport(HttpServletResponse response,String filaName) throws Exception {
+        // 总记录数
+        Integer totalRowCount = this.voteRecordService.queryVoteRecordCount();
 
-            MerchantsCustomer me=new MerchantsCustomer("11","阿里伯伯",11,"22","9999");
-            MerchantsCustomer me2=new MerchantsCustomer("112","阿里伯伯2",112,"222","99992");
-            List<MerchantsCustomer> list=new ArrayList<>();
-            list.add(me);
-            list.add(me2);
-            ExportExcel exportExcel =new ExportExcel("xxxxxx", MerchantsCustomer.class);
-           // exportExcel.setDatePattern("yyyy-MM-dd HH:mm:ss");
-            exportExcel.setDataList(list).write(response, fileName).dispose();
+        // 导出EXCEL文件名称
+        // 标题
+        String[] titles = {"id","userId","voteId","groupId","createTime"};
 
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        // 开始导入
+        PoiUtil.exportExcelToWebsite(response, totalRowCount, filaName, titles, new WriteExcelDataDelegated() {
+            @Override
+            public void writeExcelData(SXSSFSheet eachSheet, Integer startRowCount, Integer endRowCount, Integer currentPage, Integer pageSize) throws Exception {
+
+                PageHelper.startPage(currentPage, pageSize);
+                List<VoteRecord> voteRecords = voteRecordService.queryVoteRecord();
+                if (!CollectionUtils.isEmpty(voteRecords)) {
+
+                    // --------------   这一块变量照着抄就行  强迫症 后期也封装起来     ----------------------
+                    for (int i = startRowCount; i <= endRowCount; i++) {
+                        SXSSFRow eachDataRow = eachSheet.createRow(i);
+                        if ((i - startRowCount) < voteRecords.size()) {
+
+                            VoteRecord eachUserVO = voteRecords.get(i - startRowCount);
+                            // ---------   这一块变量照着抄就行  强迫症 后期也封装起来     -----------------------
+
+                            eachDataRow.createCell(0).setCellValue(eachUserVO.getId() == null ? "" : eachUserVO.getId());
+                            eachDataRow.createCell(1).setCellValue(eachUserVO.getUserId() == null ? "" : eachUserVO.getUserId());
+                            eachDataRow.createCell(2).setCellValue(eachUserVO.getVoteId() == null ? "" : eachUserVO.getVoteId());
+                            eachDataRow.createCell(3).setCellValue(eachUserVO.getGroupId() == null ? "" : eachUserVO.getGroupId());
+                            eachDataRow.createCell(4).setCellValue(eachUserVO.getCreateTime() == null ? "" : eachUserVO.getCreateTime());
+                        }
+                    }
+                }
+
+            }
+        });
+
+        return "导出成功";
     }
+
+
 }

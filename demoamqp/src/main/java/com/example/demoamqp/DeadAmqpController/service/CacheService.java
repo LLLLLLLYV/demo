@@ -2,6 +2,7 @@ package com.example.demoamqp.DeadAmqpController.service;
 
 
 import com.example.demoamqp.DeadAmqpController.bean.User;
+import org.springframework.stereotype.Service;
 
 public interface CacheService {
 
