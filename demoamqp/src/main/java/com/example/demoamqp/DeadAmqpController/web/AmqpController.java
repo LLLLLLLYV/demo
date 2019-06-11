@@ -1,11 +1,12 @@
 package com.example.demoamqp.DeadAmqpController.web;
 
 import com.example.demoamqp.DeadAmqpController.annotation.ExcelValue;
-import com.example.demoamqp.DeadAmqpController.bean.MerchantsCustomer;
-import com.example.demoamqp.DeadAmqpController.bean.User;
-import com.example.demoamqp.DeadAmqpController.bean.VoteRecord;
+import com.example.demoamqp.DeadAmqpController.bean.*;
 import com.example.demoamqp.DeadAmqpController.config.*;
 import com.example.demoamqp.DeadAmqpController.service.impl.CacheServiceImpl;
+
+import com.example.demoamqp.DeadAmqpController.service.impl.CourseServiceImpl;
+import com.example.demoamqp.DeadAmqpController.service.impl.StudentServiceImpl;
 import com.example.demoamqp.DeadAmqpController.service.impl.VoteRecordServiceImpl;
 import com.example.demoamqp.DeadAmqpController.utils.PoiUtil;
 import com.github.pagehelper.PageHelper;
@@ -55,7 +56,40 @@ public class AmqpController {
 
     @Autowired(required = false)
     private User user0;
+    @Autowired
+    private StudentServiceImpl studentService;
+    @Autowired
+    private CourseServiceImpl courseService;
 
+    /**
+     * 增加一个课程
+     * @param course
+     * @return
+     */
+    @RequestMapping(value = "addCourse",method = RequestMethod.POST)
+    public int addCourse(Course course){
+        return courseService.addCourse(course);
+    }
+
+    /**
+     * 根据姓名查询对应的学生及其课程
+     * @param name
+     * @return
+     */
+   @RequestMapping(value = "queryStudentByName",method = RequestMethod.GET)
+    public List<Student> queryStudentByName(String name){
+        return studentService.queryStudentByName(name);
+    }
+
+    /**
+     * 增加一个学生
+     * @param student
+     * @return
+     */
+    @RequestMapping(value = "addStudent",method = RequestMethod.POST)
+    public int addStudent(Student student){
+        return studentService.addStudent(student);
+    }
 
     @RequestMapping(value = "jisuan",method = RequestMethod.GET)
     public Long jisuan(Integer a){

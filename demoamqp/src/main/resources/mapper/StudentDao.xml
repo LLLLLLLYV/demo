@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demoamqp.DeadAmqpController.dao.StudentDao">
+
+
+    <cache eviction=""></cache>
+    <resultMap id="sutdentAndCourse" type="com.example.demoamqp.DeadAmqpController.bean.Student">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="age" property="age"></result>
+        <result column="sex" property="sex"></result>
+        <result column="course_id" property="courseId"></result>
+        <collection  property="courseList"
+                    columnPrefix="c_"
+
+        ofType="com.example.demoamqp.DeadAmqpController.bean.Course">
+
+            <id column="id" property="id"></id>
+            <result column="course_name" property="courseName" ></result>
+            <result column="course_grade" property="courseGrade"></result>
+            <result column="course_teacher" property="courseTeacher"></result>
+            <result column="s_id" property="sId"></result>
+        </collection>
+    </resultMap>
+
+
+    <select id="queryStudentByName" parameterType="java.lang.String" resultMap="sutdentAndCourse">
+
+        SELECT s.id,s.`name`,s.`sex`,s.`age`,s.`course_id`
+            ,c.`id` c_id,c.`course_name` c_course_name,c.`course_grade`c_course_grade
+            ,c.`course_teacher` c_course_teacher,c.`s_id` c_s_id
+             FROM course c LEFT JOIN student s ON c.`s_id`=s.`id`
+             WHERE s.name LIKE CONCAT('%',#{name},'%');
+    </select>
+    <insert id="addStudent" parameterType="com.example.demoamqp.DeadAmqpController.bean.Student">
+         INSERT	INTO student(id,NAME,age,course_id,sex) VALUE(NULL,
+    #{name},#{age},#{courseId},#{sex})
+    </insert>
+
+
+</mapper>

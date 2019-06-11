@@ -45,3 +45,11 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
   returnPageInfo: check
+
+logging:
+  level:
+    com:
+      example:
+        demoamqp:
+          DeadAmqpController:
+            dao: debug
